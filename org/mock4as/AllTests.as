@@ -35,10 +35,8 @@ package org.mock4as
     		myTS.addTest(new PublisherTest("testOneSubscriberReceivesAMessage"));
     		myTS.addTest(new BankSystemTest("testTheTruth"));
     		myTS.addTest(new BankSystemTest("testTransferSameCurrency"));
-    		
-    		
-    		myTS.addTest(new MockTest("testHashMap"));
-    		
+    		myTS.addTest(new BankSystemTest("testTransferDifferentCurrency"));
+    		myTS.addTest(new BankSystemTest("testTransferInsufficientFunds"));
     		
 	    	return myTS;
 		}

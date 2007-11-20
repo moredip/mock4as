@@ -124,27 +124,6 @@ package org.mock4as
 			var expectedMessage:String = "Ola Paulo";
 			assertEquals(expectedMessage, greetingMessage);
 		}  			
-		public function testHashMap():void{
-/*			
-			var myHashMap:Object = new Object();
-			var myIndex1:String = "myIndex1";
-			var myIndex2:String = "myIndex2";
-			var myObj1:MethodInvocation = new MethodInvocation()
-			var myObj2:MethodInvocation = new MethodInvocation()
-			myHashMap[myIndex1] = myObj1;
-			myHashMap[myIndex2] = myObj2;
-			assertEquals(myObj1, myHashMap[myIndex1]);
-			assertEquals(myObj2, myHashMap[myIndex2]);
-			assertEquals(0, myObj1.timesInvoked);
-			myObj1.timesInvoked++;
-			assertEquals(1, myObj1.timesInvoked);
-			var resultObj:MethodInvocation;
-			resultObj = myHashMap[myIndex1];
-			assertEquals(1, resultObj.timesInvoked);
-			assertEquals(null, myHashMap["inexixtingIndex"]);
-	*/
-
-		}  			
 
 	}
 	

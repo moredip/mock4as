@@ -60,6 +60,11 @@ package org.mock4as
 			expectedMethodInvocationFor(methodInProgress).returnValue = returnValue; 			
 		}
 		
+		public function willThrow(exception:Object)
+		{
+			expectedMethodInvocationFor(methodInProgress).exception = exception; 			
+		}
+		
 		public function noReturn()
 		{
 		}
@@ -70,6 +75,14 @@ package org.mock4as
 				return expectedMethodInvocationFor(methodName).returnValue;
 			}
 			return "No Return Defined for " + methodName;
+		}
+
+		private function exceptionFor(methodName:String):Object
+		{
+			if(expectedMethodInvocationFor(methodName)!=null){
+				return expectedMethodInvocationFor(methodName).exception;
+			}
+			return "No Exception for " + methodName;
 		}
 
 		private function verifyMethodIsExpected(methodName:String)
@@ -99,6 +112,10 @@ package org.mock4as
 		
 		protected function expectedReturnFor(methodName:String):Object{
 			return this.returnValueFor(methodName);			
+		}	
+
+		protected function expectedExceptionFor(methodName:String):Object{
+			return this.exceptionFor(methodName);			
 		}	
 
 		private function methodHasBeenInvoked(methodName:String):Boolean{
@@ -168,5 +185,7 @@ class MethodInvocation {
 	var timesInvoked:int=1;
 	var args:Array = new Array();
 	var returnValue:Object;
+	var exception:Object;
+	
 }
     
