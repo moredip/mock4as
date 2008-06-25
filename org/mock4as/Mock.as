@@ -14,9 +14,12 @@ package org.mock4as
 		
 		private var testFailed:Boolean = false;
 		private var reason:String;
+		
+		public var numOfExpectedMethodCalls:uint = 0;
 
 		public function expects(methodName:String):Mock
 		{
+			numOfExpectedMethodCalls++;
 			this.methodInProgress = methodName;
 			this.expectedMethodInvocations[methodName] = new MethodInvocation(methodName); 
 			return this;
@@ -55,17 +58,17 @@ package org.mock4as
 			return this;
 		}
 
-		public function willReturn(returnValue:Object)
+		public function willReturn(returnValue:Object):void
 		{
 			expectedMethodInvocationFor(methodInProgress).returnValue = returnValue; 			
 		}
 		
-		public function willThrow(exception:Object)
+		public function willThrow(exception:Object):void
 		{
 			expectedMethodInvocationFor(methodInProgress).exception = exception; 			
 		}
 		
-		public function noReturn()
+		public function noReturn():void
 		{
 		}
 
@@ -85,7 +88,7 @@ package org.mock4as
 			return "No Exception for " + methodName;
 		}
 
-		private function verifyMethodIsExpected(methodName:String)
+		private function verifyMethodIsExpected(methodName:String):void
 		{
 			if (!this.methodIsExpected(methodName)){
 				reason = "Unexpected method call - " + methodName + "(...)";
@@ -97,7 +100,7 @@ package org.mock4as
 			return (this.expectedMethodInvocationFor(methodName)!=null);
 		} 
 
-		private function verifyTimesInvoked(methodName:String)
+		private function verifyTimesInvoked(methodName:String):void
 		{
 			if (!this.testFailed){
 				var expectedTimeInvoked:int = this.expectedMethodInvocationFor(methodName).timesInvoked;
@@ -122,7 +125,8 @@ package org.mock4as
 			return (this.actualMethodInvocationFor(methodName) != null);
 		} 
 		
-		protected function record(methodName:String, ...args){
+		protected function record(methodName:String, ...args):void
+		{
 			this.methodInvoked.push(methodName);
 			if (this.methodHasBeenInvoked(methodName)){
 				this.actualMethodInvocationFor(methodName).timesInvoked++;
@@ -133,7 +137,8 @@ package org.mock4as
 			}
 			
 		}
-		private function verifyArgList(methodName:String, args:Array){
+		private function verifyArgList(methodName:String, args:Array):void
+		{
 			if (!this.testFailed){
 				var argsReceived:String = args.toString();
 				var methInv:MethodInvocation;
@@ -150,16 +155,31 @@ package org.mock4as
 		}
 		
 		// verify all method expectations for this mock
-		public function verify(){
+		public function verify():void
+		{	
 			var methodInvokation:MethodInvocation;
-			for (var i:int=0; i<this.methodInvoked.length; i++){
+			if (numOfExpectedMethodCalls!=methodInvoked.length){
+				
+				this.reason = "Number of Expected calles does not match number of actual calls made.";
+				this.testFailed=true;
+				return;
+			}
+			for (var i:int=0; i<numOfExpectedMethodCalls; i++){
 				methodInvokation = this.actualMethodInvocationFor(this.methodInvoked.valueOf(i));
 				this.verifyMethodIsExpected(this.methodInvoked[i]);
-				if (methodInvokation!= null){
-					this.verifyTimesInvoked(methodInvokation.name);
-					this.verifyArgList(methodInvokation.name, methodInvokation.args);
+				if (methodInvokation!= null)
+				{
+					verifyTimesCalledAndArgList(methodInvokation);
 				}
 			}
+		}
+		
+		
+		
+		private function verifyTimesCalledAndArgList(inMethodInvokation:MethodInvocation):void
+		{
+			this.verifyTimesInvoked(inMethodInvokation.name);
+			this.verifyArgList(inMethodInvokation.name, inMethodInvokation.args);
 		}
 		
 		public function success():Boolean{
@@ -181,11 +201,11 @@ class MethodInvocation {
    function MethodInvocation(methodName : String){
          this.name = methodName;
    }	
-	var name:String;
-	var timesInvoked:int=1;
-	var args:Array = new Array();
-	var returnValue:Object;
-	var exception:Object;
+	public var name:String;
+	public var timesInvoked:int=1;
+	public var args:Array = new Array();
+	public var returnValue:Object;
+	public var exception:Object;
 	
 }
     

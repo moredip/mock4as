@@ -10,5 +10,9 @@ package org.mock4as.samples.greeting
 		public function sayHello(language:String, name:String):String{
 			return translator.translate("English", language, "Hello") + " " + name;
 		}
+		public function doSomethingElse():void
+		{
+			translator.doSomethingElse();
+		}
 	}
 }

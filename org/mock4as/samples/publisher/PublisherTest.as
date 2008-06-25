@@ -34,7 +34,7 @@ import org.mock4as.Mock;
 import org.mock4as.samples.publisher.ISubscriber;
 
 class MockSubscriber extends Mock implements ISubscriber {
-	public function receive(message:String)
+	public function receive(message:String):void
 	{
 		record("receive", message);
 	}

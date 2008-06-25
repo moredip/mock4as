@@ -35,5 +35,9 @@ class MockTranslator extends Mock implements ITranslator {
 		record("translate", from, to, word);
 		return expectedReturnFor("translate") as String;
 	}
+	
+	public function doSomethingElse():void
+	{
+	}
 }
     

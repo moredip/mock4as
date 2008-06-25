@@ -26,8 +26,12 @@ package org.mock4as
     		myTS.addTest(new MockTest("testWrongArgNumberLessArgs"));
     		myTS.addTest(new MockTest("testMethodInvocationMoreTimesThanExpected"));
     		myTS.addTest(new MockTest("testMethodInvocationLessTimesThanExpected"));
+    		
+    		myTS.addTest(new MockTest("testFailsIfMethodNeverCalled"));
+  			myTS.addTest(new MockTest("testFailsIfMoreMethodsAreCalledThanExpected"));
     		// teest positive scenario
     		myTS.addTest(new MockTest("testSuccessMethodInvocation"));
+    		
 
     		
     		// mock samples positive tests
@@ -37,6 +41,8 @@ package org.mock4as
     		myTS.addTest(new BankSystemTest("testTransferSameCurrency"));
     		myTS.addTest(new BankSystemTest("testTransferDifferentCurrency"));
     		myTS.addTest(new BankSystemTest("testTransferInsufficientFunds"));
+    		
+    		
     		
 	    	return myTS;
 		}

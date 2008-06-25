@@ -8,15 +8,21 @@ package org.mock4as
     	
     public class MockTest extends TestCase
 	{
-		var METHOD:String = "translate";
-		var ARG1:String = "English";
-		var ARG2:String = "Portuguese";
-		var ARG3:String = "Hello";
+		private var METHOD:String = "translate";
+		private var ARG1:String = "English";
+		private var ARG2:String = "Portuguese";
+		private var ARG3:String = "Hello";
 
         public function MockTest(methodName : String){
             super(methodName);
         }
             
+        public function testFailsIfMethodNeverCalled():void
+         {
+           var mock:MockTranslator = new MockTranslator();
+           mock.expects("someMethodThatDoesNotExist");
+           assertFalse(mock.success());
+       }
 		public function testWrongMethodName():void{
 			var mock:MockTranslator = new MockTranslator();
 			var WRONG_METHOD:String = "WRONG_METHOD";
@@ -124,16 +130,32 @@ package org.mock4as
 			var expectedMessage:String = "Ola Paulo";
 			assertEquals(expectedMessage, greetingMessage);
 		}  			
+		
+		public function testFailsIfMoreMethodsAreCalledThanExpected():void
+        {
+               var mock:MockTranslator = new MockTranslator();
+               mock.expects(METHOD).withArgs(ARG1, ARG2, ARG3).willReturn("Ola");
+               var myGreeting:Greeting = new Greeting(mock);
+               // First invocation
+               var greetingMessage:String = myGreeting.sayHello("Portuguese", "Paulo");
+               assertTrue(mock.success());
+               var expectedMessage:String = "Ola Paulo";
+              // assertEquals(expectedMessage, greetingMessage);
+               myGreeting.doSomethingElse();
+               mock.verify();
+               trace("mock.success() = "+mock.success());
+               assertFalse(mock.success());
+        }
 
 	}
 	
 }
 
 class MethodInvocation {
-	var argIndex:int=0;
-	var timesInvoked:int=1;
-	var args:Array = new Array();
-	var returnValue:Object;
+	internal var argIndex:int=0;
+	internal var timesInvoked:int=1;
+	internal var args:Array = new Array();
+	internal var returnValue:Object;
 }
 
 // Inner Class
@@ -145,5 +167,9 @@ class MockTranslator extends Mock implements ITranslator {
 	{
 		record("translate", from, to, word);
 		return expectedReturnFor("translate") as String;
+	}
+	public function doSomethingElse():void
+	{
+		record("doSomethingElse");
 	}
 }

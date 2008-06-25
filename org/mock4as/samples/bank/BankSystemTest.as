@@ -28,7 +28,7 @@ package org.mock4as.samples.bank
 		}
 		
 	
-	    public function testTransferSameCurrency()  {
+	    public function testTransferSameCurrency():void  {
 		    	
 	        var mockCanadianAccount:MockAccount = new MockAccount();
 	        var mockCanadianAccount2:MockAccount = new MockAccount();
@@ -56,7 +56,7 @@ package org.mock4as.samples.bank
   	
 	    }
 	    
-	    public function testTransferDifferentCurrency()  {
+	    public function testTransferDifferentCurrency():void  {
 		    	
 	        var mockUSAAccount:MockAccount = new MockAccount();
 	        var mockBRAAccount:MockAccount = new MockAccount();
@@ -83,7 +83,7 @@ package org.mock4as.samples.bank
 			assertTrue(mockBRAAccount.errorMessage(), mockBRAAccount.success());
 	    }
 
-	    public function testTransferInsufficientFunds()  {
+	    public function testTransferInsufficientFunds():void  {
 		    	
 	        var mockCanadianAccount:MockAccount = new MockInsufficientFundsAccount();
 	        var mockCanadianAccount2:MockAccount = new MockAccount();
@@ -144,19 +144,19 @@ class MockAccount extends Mock implements IAccount {
 		record("balance");
 		return expectedReturnFor("balance") as Number;
 	}
-	public function deposit(amount:Number){
+	public function deposit(amount:Number):Number{
 		record("deposit", amount);
 		return expectedReturnFor("deposit") as Number;
 	}
 	//throws InsufficientFundsException		
-	public function  withdraw(amount:Number){
+	public function  withdraw(amount:Number):void{
 		record("withdraw", amount);
 	}
 } 
 
 class MockInsufficientFundsAccount extends MockAccount {
 	//throws InsufficientFundsException		
-	override public function  withdraw(amount:Number){
+	override public function  withdraw(amount:Number):void{
 		record("withdraw", amount);
 		throw expectedExceptionFor("withdraw");
 	}

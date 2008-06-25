@@ -9,7 +9,7 @@ package org.mock4as.samples.bank
 	    }
 
 	    // thorw InsufficientFundsException 
-	    public function transfer(from:IAccount, to: IAccount, amount:Number)  {
+	    public function transfer(from:IAccount, to: IAccount, amount:Number):void  {
 	        var  rate:Number = this.currencyService.conversionRate(from.currency(), to.currency());
 	        from.withdraw(amount);
 	        to.deposit(amount * rate);
