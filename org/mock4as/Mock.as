@@ -160,7 +160,7 @@ package org.mock4as
 			var methodInvokation:MethodInvocation;
 			if (numOfExpectedMethodCalls!=methodInvoked.length){
 				
-				this.reason = "Number of Expected calles does not match number of actual calls made.";
+				this.reason = "Number of expected calls does not match number of actual calls made. Expected "+methodInvoked.length+" calls, but "+numOfExpectedMethodCalls+" were made.";
 				this.testFailed=true;
 				return;
 			}
