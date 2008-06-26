@@ -1,10 +1,10 @@
 package org.mock4as
 {
     import flexunit.framework.TestCase;
-    import flexunit.framework.TestSuite;
     
-    import org.mock4as.samples.greeting.Greeting
+    import org.mock4as.samples.greeting.Greeting;
     import org.mock4as.samples.greeting.ITranslator;
+    import org.mock4as.samples.mockInComposition.MockInComposition;
     	
     public class MockTest extends TestCase
 	{
@@ -147,6 +147,27 @@ package org.mock4as
                assertFalse(mock.success());
         }
 
+        public function testSuccess_forAClassUsingMockInComposition_whereExpectedCallsEqualActualCalls_shouldReturnTrue():void
+        {
+        	var classWithMockInComposition:MockInComposition = new MockInComposition();
+        	var someStringArg:String = "someStringArg";
+        	classWithMockInComposition.expects("someMethod").times(1).withArg(someStringArg);
+        	classWithMockInComposition.someMethod(someStringArg);
+        	classWithMockInComposition.verify();
+        	assertTrue(classWithMockInComposition.errorMessage(), classWithMockInComposition.success());
+        }
+        
+        public function testSuccess_forAClassUsingMockInComposition_whereExpectedCallsDoNotEqualActualCalls_shouldReturnFalse():void
+        {
+        	var classWithMockInComposition:MockInComposition = new MockInComposition();
+        	var someStringArg:String = "someStringArg";
+        	classWithMockInComposition.expects("someMethod").times(1).withArg(someStringArg);
+			// In this case, we never call the method on the mock
+			// but we are expecting someMethod to get called once with someStringArg
+			// so success should return false
+        	classWithMockInComposition.verify();
+        	assertFalse(classWithMockInComposition.errorMessage(), classWithMockInComposition.success());
+        }
 	}
 	
 }

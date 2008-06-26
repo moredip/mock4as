@@ -42,7 +42,13 @@ package org.mock4as
     		myTS.addTest(new BankSystemTest("testTransferDifferentCurrency"));
     		myTS.addTest(new BankSystemTest("testTransferInsufficientFunds"));
     		
-    		
+    		// mock in composition
+    		// If you don't want to subclass mock (mainly because you want to subclass another class)
+    		// you can use mock in composition
+    		// 
+    		myTS.addTest(new MockTest("testSuccess_forAClassUsingMockInComposition_whereExpectedCallsEqualActualCalls_shouldReturnTrue"));
+    		myTS.addTest(new MockTest("testSuccess_forAClassUsingMockInComposition_whereExpectedCallsDoNotEqualActualCalls_shouldReturnFalse"));
+
     		
 	    	return myTS;
 		}

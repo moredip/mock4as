@@ -125,7 +125,7 @@ package org.mock4as
 			return (this.actualMethodInvocationFor(methodName) != null);
 		} 
 		
-		protected function record(methodName:String, ...args):void
+		public function record(methodName:String, ...args):void
 		{
 			this.methodInvoked.push(methodName);
 			if (this.methodHasBeenInvoked(methodName)){
