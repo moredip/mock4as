@@ -5,40 +5,45 @@ package org.mock4as
 		public function Mock(){
 		}  
 		
-		// hash table of methodName -> MethodInvocation obj
-		private var actualMethodInvocations:Object = new Object();
-		private var methodInvoked:Array = new Array();
-		// hash table of methodName -> MethodInvocation obj
-		private var expectedMethodInvocations:Object = new Object();
-		private var methodInProgress:String;
-		
 		private var testFailed:Boolean = false;
 		private var reason:String;
+		private var expectedMethods:Array = new Array();
+		// currentMethod is the method used while setting up the expectations
+		// currentMethod changes every time we call expects(methodName)
+		private var currentMethod:MethodInvocation;
+		private var currentReturnValue:Object;
+		private var currentException:Object;
+		private var hasBeenVerified:Boolean = false;
 		
-		public var numOfExpectedMethodCalls:uint = 0;
-
+		
+		
+		
 		public function expects(methodName:String):Mock
 		{
-			numOfExpectedMethodCalls++;
-			this.methodInProgress = methodName;
-			this.expectedMethodInvocations[methodName] = new MethodInvocation(methodName); 
+			currentMethod = new MethodInvocation(methodName)
+			expectedMethods.push(currentMethod);
 			return this;
 		}
 
-		public function times(timesInvoked:int):Mock
+		public function times(timesInvoked:uint):Mock
 		{
-			expectedMethodInvocationFor(methodInProgress).timesInvoked = timesInvoked;
+			// If we don't expect the method to be called,
+			// remove it from the expected methods array
+			if (timesInvoked==0) expectedMethods.pop();
+			currentMethod.timesInvoked = timesInvoked;
 			return this;
 		}
 		
-		private function expectedMethodInvocationFor(methodName:String):MethodInvocation
+		public function withArgs(...args):Mock
 		{
-			return this.expectedMethodInvocations[methodName];
+			currentMethod.args = args;
+			return this;
 		}
-
-		private function actualMethodInvocationFor(methodName:String):MethodInvocation
+		
+		public function withArg(arg:Object):Mock
 		{
-			return this.actualMethodInvocations[methodName];
+			currentMethod.args[0] = arg;
+			return this;
 		}
 		
 		public function noArgs():Mock
@@ -46,166 +51,156 @@ package org.mock4as
 			return this;
 		}
 
-		public function withArgs(...args):Mock
-		{
-			expectedMethodInvocationFor(methodInProgress).args = args; 			
-			return this;
-		}
-
-		public function withArg(arg:Object):Mock
-		{
-			expectedMethodInvocationFor(methodInProgress).args[0] = arg; 			
-			return this;
-		}
-
 		public function willReturn(returnValue:Object):void
 		{
-			expectedMethodInvocationFor(methodInProgress).returnValue = returnValue; 			
+			currentMethod.returnValue = returnValue;
 		}
 		
 		public function willThrow(exception:Object):void
 		{
-			expectedMethodInvocationFor(methodInProgress).exception = exception; 			
+			currentMethod.exception = exception;
 		}
 		
 		public function noReturn():void
 		{
 		}
 
-		private function returnValueFor(methodName:String):Object
-		{
-			if(expectedMethodInvocationFor(methodName)!=null){
-				return expectedMethodInvocationFor(methodName).returnValue;
-			}
-			return "No Return Defined for " + methodName;
-		}
 
-		private function exceptionFor(methodName:String):Object
-		{
-			if(expectedMethodInvocationFor(methodName)!=null){
-				return expectedMethodInvocationFor(methodName).exception;
-			}
-			return "No Exception for " + methodName;
-		}
 
-		private function verifyMethodIsExpected(methodName:String):void
+
+
+
+
+
+		public function record(methodName:String, ...args):void
 		{
-			if (!this.methodIsExpected(methodName)){
-				reason = "Unexpected method call - " + methodName + "(...)";
+			var newMethodEvocation:MethodInvocation = new MethodInvocation(methodName);
+			newMethodEvocation.args = args;
+			var index:int = getMethodIndex(newMethodEvocation);
+			if (index != -1)
+			{
+				currentReturnValue = expectedMethods[index].returnValue;
+				currentException = expectedMethods[index].exception;
+				removeMethodCallFromExpectedList(index);
+			} else {
+				reason = "Was not expecting "+newMethodEvocation.name+"("+newMethodEvocation.args+") to be called.";
 				testFailed = true;
 			}
 		}
 		
-		private function methodIsExpected(methodName:String):Boolean{
-			return (this.expectedMethodInvocationFor(methodName)!=null);
-		} 
-
-		private function verifyTimesInvoked(methodName:String):void
-		{
-			if (!this.testFailed){
-				var expectedTimeInvoked:int = this.expectedMethodInvocationFor(methodName).timesInvoked;
-				var actualTimeInvoked:int = this.actualMethodInvocationFor(methodName).timesInvoked;
-				
-				if (actualTimeInvoked != expectedTimeInvoked){
-					reason = "Unexpected method call. Expected " + methodName + "(...) to be invoked " + expectedTimeInvoked + " time(s), but it was invoked " + actualTimeInvoked + " time(s)." ;
-					testFailed = true;
-				}			
+		protected function expectedExceptionFor(methodName:String="Depricated"):Object{
+			if(currentException!=null){
+				return currentException;
 			}
+			return "No Exception for " + methodName;			
 		}	
 		
-		protected function expectedReturnFor(methodName:String):Object{
-			return this.returnValueFor(methodName);			
+		protected function expectedReturnFor(methodName:String="Depricated"):Object
+		{
+			return currentReturnValue;			
 		}	
-
-		protected function expectedExceptionFor(methodName:String):Object{
-			return this.exceptionFor(methodName);			
-		}	
-
-		private function methodHasBeenInvoked(methodName:String):Boolean{
-			return (this.actualMethodInvocationFor(methodName) != null);
-		} 
 		
-		public function record(methodName:String, ...args):void
+		
+		private function removeMethodCallFromExpectedList(index:uint):void
 		{
-			this.methodInvoked.push(methodName);
-			if (this.methodHasBeenInvoked(methodName)){
-				this.actualMethodInvocationFor(methodName).timesInvoked++;
-			}else{
-				var methodInvoked:MethodInvocation = new MethodInvocation(methodName)
-				methodInvoked.args = args;
-				this.actualMethodInvocations[methodName] = methodInvoked;
+			if (expectedMethods[index].timesInvoked>1)
+			{
+				expectedMethods[index].timesInvoked--;
+			} else {
+				expectedMethods.splice(index, 1);
 			}
-			
-		}
-		private function verifyArgList(methodName:String, args:Array):void
-		{
-			if (!this.testFailed){
-				var argsReceived:String = args.toString();
-				var methInv:MethodInvocation;
-				methInv = this.expectedMethodInvocationFor(methodName);
-				var argsExpected:String = methInv.args.toString();
-			
-				if (argsReceived != argsExpected){
-					reason = "Unexpected argument value. Expected " + methodName + "("+argsExpected+"), but " + methodName + "("+argsReceived+") was invoked instead.";
-					testFailed = true;
-				}
-				
-			}
-
 		}
 		
+		private function getMethodIndex(methodToFind:MethodInvocation):int
+		{
+			for (var i:uint =0; i<=expectedMethods.length-1; i++)
+			{
+				if (methodsAreEqual(expectedMethods[i], methodToFind)) return i;
+			}
+			return -1;
+		}
+		
+
 		// verify all method expectations for this mock
 		public function verify():void
 		{	
-			var methodInvokation:MethodInvocation;
-			if (numOfExpectedMethodCalls!=methodInvoked.length){
-				
-				this.reason = "Number of expected calls does not match number of actual calls made. Expected "+methodInvoked.length+" calls, but "+numOfExpectedMethodCalls+" were made.";
-				this.testFailed=true;
+			// Don't verify more than once to minimize processing
+			if (hasBeenVerified) return;
+			hasBeenVerified = true;
+			if (expectedMethods.length>0)
+			{
+				testFailed=true;
+				reason = getExpectedMethodCallNames(); 
 				return;
 			}
-			for (var i:int=0; i<numOfExpectedMethodCalls; i++){
-				methodInvokation = this.actualMethodInvocationFor(this.methodInvoked.valueOf(i));
-				this.verifyMethodIsExpected(this.methodInvoked[i]);
-				if (methodInvokation!= null)
-				{
-					verifyTimesCalledAndArgList(methodInvokation);
-				}
-			}
 		}
 		
-		
-		
-		private function verifyTimesCalledAndArgList(inMethodInvokation:MethodInvocation):void
+		private function getExpectedMethodCallNames():String
 		{
-			this.verifyTimesInvoked(inMethodInvokation.name);
-			this.verifyArgList(inMethodInvokation.name, inMethodInvokation.args);
-		}
-		
-		public function success():Boolean{
-			this.verify();
-			return !this.testFailed;
+			var methodNamesString:String = "The following methods were expected but not called: \n";
+			
+			for (var i:uint=0; i<=expectedMethods.length-1; i++)
+			{
+				methodNamesString+=expectedMethods[i].name+"("+expectedMethods[i].args+") \n";
+			}
+			return methodNamesString;
 		}
 
-		public function hasError():Boolean{
-			return !this.testFailed;
+		private function methodsAreEqual(expected:MethodInvocation, actual:MethodInvocation):Boolean
+		{
+			if (expected.name != actual.name) return false;
+			if (expected.args.length!=actual.args.length)
+			{
+				reason = "Number of expected args does not equal number of actual args. Expected "+expected+" but was "+actual;
+				return false;
+			}
+			for (var i:uint=0; i<=expected.args.length-1; i++)
+			{
+				if (expected.args[i] != actual.args[i]) 
+				{
+					reason = "Expected "+expected.name+"("+expected.args+") but was "+actual.name+"("+actual.args+")";
+					return false;
+				}
+			}
+			return true;
 		}
-		public function errorMessage():String{
-			return this.reason;
+		
+		public function success():Boolean
+		{
+			verify();
+			return !testFailed;
+		}
+
+		public function hasError():Boolean
+		{
+			return !testFailed;
+		}
+		public function errorMessage():String
+		{
+			verify();
+			return reason;
 		}
 		
 	}
 }
 
-class MethodInvocation {
-   function MethodInvocation(methodName : String){
-         this.name = methodName;
+class MethodInvocation 
+{
+   public function MethodInvocation(methodName : String)
+   {
+         name = methodName;
    }	
+   
 	public var name:String;
-	public var timesInvoked:int=1;
+	public var timesInvoked:int = 1;
 	public var args:Array = new Array();
 	public var returnValue:Object;
 	public var exception:Object;
+	
+	public function toString():String
+	{
+		return name+"("+args+")";
+	}
 	
 }
     

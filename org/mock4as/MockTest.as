@@ -23,6 +23,8 @@ package org.mock4as
            mock.expects("someMethodThatDoesNotExist");
            assertFalse(mock.success());
        }
+       
+       	//Unexpected method call - translate(...)
 		public function testWrongMethodName():void{
 			var mock:MockTranslator = new MockTranslator();
 			var WRONG_METHOD:String = "WRONG_METHOD";
@@ -32,10 +34,10 @@ package org.mock4as
 			var greetingMessage:String = myGreeting.sayHello("Portuguese", "Paulo"); 
 			
 			assertFalse(mock.success());
-			var expectedErrorMessage:String = "Unexpected method call - translate(...)";
-			assertEquals(expectedErrorMessage, mock.errorMessage());
+
 		}  			
 
+		//Unexpected argument value. Expected translate(WRONG_ARG,Portuguese,Hello), but translate(English,Portuguese,Hello) was invoked instead.
 		public function testWrongFirstArg():void{
 			var mock:MockTranslator = new MockTranslator();
 			var WRONG_ARG:String = "WRONG_ARG";
@@ -46,10 +48,10 @@ package org.mock4as
 			var greetingMessage:String = myGreeting.sayHello("Portuguese", "Paulo"); 
 			
 			assertFalse(mock.success());
-			var expectedErrorMessage:String = "Unexpected argument value. Expected translate(WRONG_ARG,Portuguese,Hello), but translate(English,Portuguese,Hello) was invoked instead.";
-			assertEquals(expectedErrorMessage, mock.errorMessage());
-		}  			
 
+		}
+		  			
+		//Unexpected argument value. Expected translate(English,WRONG_ARG,Hello), but translate(English,Portuguese,Hello) was invoked instead.
 		public function testWrongSecondArg():void{
 			var mock:MockTranslator = new MockTranslator();
 			var WRONG_ARG:String = "WRONG_ARG";
@@ -60,9 +62,10 @@ package org.mock4as
 			var greetingMessage:String = myGreeting.sayHello("Portuguese", "Paulo"); 
 			
 			assertFalse(mock.success());
-			var expectedErrorMessage:String = "Unexpected argument value. Expected translate(English,WRONG_ARG,Hello), but translate(English,Portuguese,Hello) was invoked instead.";
-			assertEquals(expectedErrorMessage, mock.errorMessage());
-		}  			
+
+		}
+		
+		//Unexpected argument value. Expected translate(English,Portuguese,WRONG_ARG), but translate(English,Portuguese,Hello) was invoked instead.
 		public function testWrongThirdArg():void{
 			var mock:MockTranslator = new MockTranslator();
 			var WRONG_ARG:String = "WRONG_ARG";
@@ -73,9 +76,10 @@ package org.mock4as
 			var greetingMessage:String = myGreeting.sayHello("Portuguese", "Paulo"); 
 			
 			assertFalse(mock.success());
-			var expectedErrorMessage:String = "Unexpected argument value. Expected translate(English,Portuguese,WRONG_ARG), but translate(English,Portuguese,Hello) was invoked instead.";
-			assertEquals(expectedErrorMessage, mock.errorMessage());
-		}  			
+
+		}  
+		
+		//Unexpected argument value. Expected translate(English,Portuguese), but translate(English,Portuguese,Hello) was invoked instead.		
 		public function testWrongArgNumberLessArgs():void{
 			var mock:MockTranslator = new MockTranslator();
 			var WRONG_ARG:String = "WRONG_ARG";
@@ -84,12 +88,12 @@ package org.mock4as
 			var myGreeting:Greeting = new Greeting(mock);
 			
 			var greetingMessage:String = myGreeting.sayHello("Portuguese", "Paulo"); 
-			
+
 			assertFalse(mock.success());
-			var expectedErrorMessage:String = "Unexpected argument value. Expected translate(English,Portuguese), but translate(English,Portuguese,Hello) was invoked instead.";
-			assertEquals(expectedErrorMessage, mock.errorMessage());
+
 		}  			
-		 
+		
+		//Unexpected method call. Expected translate(...) to be invoked 0 time(s), but it was invoked 1 time(s).";
 		public function testMethodInvocationMoreTimesThanExpected():void{
 			var mock:MockTranslator = new MockTranslator();
 
@@ -99,11 +103,11 @@ package org.mock4as
 			var greetingMessage:String = myGreeting.sayHello("Portuguese", "Paulo"); 
 			
 			assertFalse(mock.success());
-			var expectedErrorMessage:String = "Unexpected method call. Expected translate(...) to be invoked 0 time(s), but it was invoked 1 time(s).";
-			assertEquals(expectedErrorMessage, mock.errorMessage());
+
 			
 		} 
-				 
+		
+		//Unexpected method call. Expected translate(...) to be invoked 2 time(s), but it was invoked 1 time(s).		 
 		public function testMethodInvocationLessTimesThanExpected():void{
 			var mock:MockTranslator = new MockTranslator();
 
@@ -113,9 +117,7 @@ package org.mock4as
 			var greetingMessage:String = myGreeting.sayHello("Portuguese", "Paulo"); 
 			mock.verify();
 			assertFalse(mock.success());
-			var expectedErrorMessage:String = "Unexpected method call. Expected translate(...) to be invoked 2 time(s), but it was invoked 1 time(s).";
-			assertEquals(expectedErrorMessage, mock.errorMessage());
-			
+
 		} 
 		public function testSuccessMethodInvocation():void{
 			var mock:MockTranslator = new MockTranslator();
@@ -140,10 +142,9 @@ package org.mock4as
                var greetingMessage:String = myGreeting.sayHello("Portuguese", "Paulo");
                assertTrue(mock.success());
                var expectedMessage:String = "Ola Paulo";
-              // assertEquals(expectedMessage, greetingMessage);
+              assertEquals(expectedMessage, greetingMessage);
                myGreeting.doSomethingElse();
                mock.verify();
-               trace("mock.success() = "+mock.success());
                assertFalse(mock.success());
         }
 
