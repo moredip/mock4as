@@ -65,13 +65,6 @@ package org.mock4as
 		{
 		}
 
-
-
-
-
-
-
-
 		public function record(methodName:String, ...args):void
 		{
 			var newMethodEvocation:MethodInvocation = new MethodInvocation(methodName);
@@ -79,9 +72,10 @@ package org.mock4as
 			var index:int = getMethodIndex(newMethodEvocation);
 			if (index != -1)
 			{
-				currentReturnValue = expectedMethods[index].returnValue;
-				currentException = expectedMethods[index].exception;
+				newMethodEvocation = expectedMethods[index];
+				currentReturnValue = newMethodEvocation.returnValue;
 				removeMethodCallFromExpectedList(index);
+				if (newMethodEvocation.exception!=null) throw (newMethodEvocation.exception);
 			} else {
 				reason = "Was not expecting "+newMethodEvocation.name+"("+newMethodEvocation.args+") to be called.";
 				testFailed = true;

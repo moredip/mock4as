@@ -49,6 +49,20 @@ package org.mock4as
     		myTS.addTest(new MockTest("testSuccess_forAClassUsingMockInComposition_whereExpectedCallsEqualActualCalls_shouldReturnTrue"));
     		myTS.addTest(new MockTest("testSuccess_forAClassUsingMockInComposition_whereExpectedCallsDoNotEqualActualCalls_shouldReturnFalse"));
 
+			myTS.addTest( new MockTest("testSuccess_whenMoreMethodsAreCalledThanExpected_shouldReturnFalse"));
+			myTS.addTest( new MockTest("testSuccess_whenNoMethodsCalledButAtLeastOneExpected_shouldReturnFalse"));
+			myTS.addTest( new MockTest("testSuccess_whenExpectedCallsEqualActualCalls_shouldReturnTrue"));
+			myTS.addTest( new MockTest("testSuccess_whenExpectedCallsWithExpectedArgsEqualActualCallsWithActualArgs_shouldReturnTrue"));
+			myTS.addTest( new MockTest("testSuccess_whenExpectedArgDoesNotEqualActualArg_shouldReturnFalse"));
+			myTS.addTest( new MockTest("testSuccess_whenExpected2ndArgDoesNotEqualActual2ndArg_shouldReturnFalse"));
+			myTS.addTest( new MockTest("testWillReturn_shouldReturnValueDefinedByTest"));
+			myTS.addTest( new MockTest("testWillReturn_shouldReturnTheObjectForTheMethodWithTheExpectedArgs"));
+			myTS.addTest( new MockTest("testWillThrow_shouldThrowErrorObjectDefinedByTest"));
+			myTS.addTest( new MockTest("testSuccess_whenExpectedMethodIsCalledMultipleTimesWithAtLeastOneUnexpectedArg_shouldFail"));
+			myTS.addTest( new MockTest("testSuccess_whenMethodCalledTwiceWithSameExpectedArg_shouldReturnTrue"));
+			myTS.addTest( new MockTest("testSuccess_whenMethodNameCalledIsDifferentThanMethodNameExpected_shouldReturnFalse"));
+			myTS.addTest( new MockTest("testSuccess_whenMethodNameCalledWithSameArgsButDifferentNameAsMethodExpected_shouldReturnFalse"));
+			myTS.addTest( new MockTest("testSuccess_whenLessArgsArePassedThanExpected_shouldReturnFalse"));
     		
 	    	return myTS;
 		}
