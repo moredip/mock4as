@@ -3,9 +3,9 @@ package org.mock4as
     import flexunit.framework.TestCase;
     import flexunit.framework.TestSuite;
     
+    import org.mock4as.samples.bank.BankSystemTest;
     import org.mock4as.samples.greeting.GreetingTest;
     import org.mock4as.samples.publisher.PublisherTest;
-    import org.mock4as.samples.bank.BankSystemTest;
     
     public class AllTests extends TestCase
 	{
@@ -63,7 +63,7 @@ package org.mock4as
 			myTS.addTest( new MockTest("testSuccess_whenMethodNameCalledIsDifferentThanMethodNameExpected_shouldReturnFalse"));
 			myTS.addTest( new MockTest("testSuccess_whenMethodNameCalledWithSameArgsButDifferentNameAsMethodExpected_shouldReturnFalse"));
 			myTS.addTest( new MockTest("testSuccess_whenLessArgsArePassedThanExpected_shouldReturnFalse"));
-    		
+    		myTS.addTest( new MockTest("testSuccess_whenErrorExpectedAndMethodsCalledAsExpected_shouldReturnTrue"));
 	    	return myTS;
 		}
         

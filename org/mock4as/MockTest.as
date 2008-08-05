@@ -331,6 +331,21 @@ package org.mock4as
 			mockClass.verify();
 			assertFalse(mockClass.errorMessage(), mockClass.success());
 		}
+		
+		public function testSuccess_whenErrorExpectedAndMethodsCalledAsExpected_shouldReturnTrue():void
+		{
+			var mockClass:MockSomeInterface = new MockSomeInterface();
+			mockClass.expects("doSomething").times(1).willThrow(new Error("customError"));
+			try
+			{
+				mockClass.doSomething();
+				fail("expecting error but none was thrown");
+			} 
+			catch (e:Error)
+			{
+				assertTrue(mockClass.errorMessage(), mockClass.success());
+			}
+		}
 	}
 	
 }
