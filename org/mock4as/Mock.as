@@ -81,14 +81,7 @@ package org.mock4as
 				testFailed = true;
 			}
 		}
-		
-		protected function expectedExceptionFor(methodName:String="Depricated"):Object{
-			if(currentException!=null){
-				return currentException;
-			}
-			return "No Exception for " + methodName;			
-		}	
-		
+
 		protected function expectedReturnFor(methodName:String="Depricated"):Object
 		{
 			return currentReturnValue;			

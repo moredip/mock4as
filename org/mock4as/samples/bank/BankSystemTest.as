@@ -158,6 +158,6 @@ class MockInsufficientFundsAccount extends MockAccount {
 	//throws InsufficientFundsException		
 	override public function  withdraw(amount:Number):void{
 		record("withdraw", amount);
-		throw expectedExceptionFor("withdraw");
+		//throw expectedExceptionFor("withdraw");
 	}
 }       
