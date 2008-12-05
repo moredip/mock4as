@@ -1,11 +1,11 @@
 package org.mock4as
 {
     import flexunit.framework.TestCase;
+    import flexunit.framework.TestSuite;
     
     import org.mock4as.samples.MockSomeInterface;
     import org.mock4as.samples.greeting.Greeting;
     import org.mock4as.samples.greeting.ITranslator;
-    import org.mock4as.samples.mockInComposition.MockInComposition;
     	
     public class MockTest extends TestCase
 	{
@@ -17,6 +17,46 @@ package org.mock4as
         public function MockTest(methodName : String){
             super(methodName);
         }
+        
+            public static function suite():TestSuite
+            {
+            var testSuite:TestSuite = new TestSuite();
+            
+            // test negative scenarios
+            testSuite.addTest(new MockTest("testWrongMethodName"));
+            testSuite.addTest(new MockTest("testWrongFirstArg"));
+            testSuite.addTest(new MockTest("testWrongSecondArg"));
+            testSuite.addTest(new MockTest("testWrongThirdArg"));
+            testSuite.addTest(new MockTest("testWrongArgNumberLessArgs"));
+            testSuite.addTest(new MockTest("testMethodInvocationMoreTimesThanExpected"));
+            testSuite.addTest(new MockTest("testMethodInvocationLessTimesThanExpected"));
+            
+            testSuite.addTest(new MockTest("testFailsIfMethodNeverCalled"));
+            testSuite.addTest(new MockTest("testFailsIfMoreMethodsAreCalledThanExpected"));
+            // teest positive scenario
+            testSuite.addTest(new MockTest("testSuccessMethodInvocation"));
+            // mock in composition
+            // If you don't want to subclass mock (mainly because you want to subclass another class)
+            // you can use mock in composition
+            // 
+            testSuite.addTest( new MockTest("testSuccess_whenMoreMethodsAreCalledThanExpected_shouldReturnFalse"));
+            testSuite.addTest( new MockTest("testSuccess_whenNoMethodsCalledButAtLeastOneExpected_shouldReturnFalse"));
+            testSuite.addTest( new MockTest("testSuccess_whenExpectedCallsEqualActualCalls_shouldReturnTrue"));
+            testSuite.addTest( new MockTest("testSuccess_whenExpectedCallsWithExpectedArgsEqualActualCallsWithActualArgs_shouldReturnTrue"));
+            testSuite.addTest( new MockTest("testSuccess_whenExpectedArgDoesNotEqualActualArg_shouldReturnFalse"));
+            testSuite.addTest( new MockTest("testSuccess_whenExpected2ndArgDoesNotEqualActual2ndArg_shouldReturnFalse"));
+            testSuite.addTest( new MockTest("testWillReturn_shouldReturnValueDefinedByTest"));
+            testSuite.addTest( new MockTest("testWillReturn_shouldReturnTheObjectForTheMethodWithTheExpectedArgs"));
+            testSuite.addTest( new MockTest("testWillThrow_shouldThrowErrorObjectDefinedByTest"));
+            testSuite.addTest( new MockTest("testSuccess_whenExpectedMethodIsCalledMultipleTimesWithAtLeastOneUnexpectedArg_shouldFail"));
+            testSuite.addTest( new MockTest("testSuccess_whenMethodCalledTwiceWithSameExpectedArg_shouldReturnTrue"));
+            testSuite.addTest( new MockTest("testSuccess_whenMethodNameCalledIsDifferentThanMethodNameExpected_shouldReturnFalse"));
+            testSuite.addTest( new MockTest("testSuccess_whenMethodNameCalledWithSameArgsButDifferentNameAsMethodExpected_shouldReturnFalse"));
+            testSuite.addTest( new MockTest("testSuccess_whenLessArgsArePassedThanExpected_shouldReturnFalse"));
+            testSuite.addTest( new MockTest("testSuccess_whenErrorExpectedAndMethodsCalledAsExpected_shouldReturnTrue"));
+            return testSuite;
+        }
+        
             
         public function testFailsIfMethodNeverCalled():void
          {
@@ -149,27 +189,7 @@ package org.mock4as
                assertFalse(mock.success());
         }
 
-        public function testSuccess_forAClassUsingMockInComposition_whereExpectedCallsEqualActualCalls_shouldReturnTrue():void
-        {
-        	var classWithMockInComposition:MockInComposition = new MockInComposition();
-        	var someStringArg:String = "someStringArg";
-        	classWithMockInComposition.expects("someMethod").times(1).withArg(someStringArg);
-        	classWithMockInComposition.someMethod(someStringArg);
-        	classWithMockInComposition.verify();
-        	assertTrue(classWithMockInComposition.errorMessage(), classWithMockInComposition.success());
-        }
         
-        public function testSuccess_forAClassUsingMockInComposition_whereExpectedCallsDoNotEqualActualCalls_shouldReturnFalse():void
-        {
-        	var classWithMockInComposition:MockInComposition = new MockInComposition();
-        	var someStringArg:String = "someStringArg";
-        	classWithMockInComposition.expects("someMethod").times(1).withArg(someStringArg);
-			// In this case, we never call the method on the mock
-			// but we are expecting someMethod to get called once with someStringArg
-			// so success should return false
-        	classWithMockInComposition.verify();
-        	assertFalse(classWithMockInComposition.errorMessage(), classWithMockInComposition.success());
-        }
         
         
         public function testSuccess_whenMoreMethodsAreCalledThanExpected_shouldReturnFalse():void

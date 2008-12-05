@@ -82,7 +82,7 @@ package org.mock4as
 			}
 		}
 
-		protected function expectedReturnFor(methodName:String="Depricated"):Object
+		public function expectedReturnFor(methodName:String="Depricated"):Object
 		{
 			return currentReturnValue;			
 		}	

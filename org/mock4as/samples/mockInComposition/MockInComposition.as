@@ -1,8 +1,9 @@
 package org.mock4as.samples.mockInComposition
 {
 	import org.mock4as.Mock;
+	import org.mock4as.samples.ISomeInterface;
 	
-	public class MockInComposition extends ClassWeWantToSubclass
+	public class MockInComposition extends ClassWeWantToSubclass implements ISomeInterface
 	{
 		private var mock:Mock;
 		
@@ -17,6 +18,29 @@ package org.mock4as.samples.mockInComposition
 			mock.record("someMethod", inSomeStringArg);
 			super.someMethod(inSomeStringArg);
 		}
+		
+		public function doSomething():void
+		{
+		    mock.record("doSomething");
+		}
+        public function anotherMethodWithNoArgs():void
+        {
+            mock.record("anotherMethodWithNoArgs");
+        }
+        public function doSomethingElse(someStringArg:String):void
+        {
+             mock.record("doSomethingElse", someStringArg);
+        }
+        
+        public function doSomethingWith2Args(firstArg:String, secondArg:XML):void
+        {
+            mock.record("doSomethingWith2Args", firstArg, secondArg);
+        }
+        public function doSomethingAndReturnXML(inNodeName:String):XML
+        {
+            mock.record("doSomethingAndReturnXML", inNodeName);
+            return mock.expectedReturnFor() as XML;
+        }
 		
 		
 		/*
