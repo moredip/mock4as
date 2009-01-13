@@ -1,6 +1,7 @@
 package org.mock4as.samples.bank
 {
 	import flexunit.framework.TestCase;
+	import org.mock4as.Mock;
 
 	public class BankSystemTest extends TestCase
 	{
