@@ -28,6 +28,7 @@ package org.mock4as
     		myTS.addTest(new MockTest("testMethodInvocationLessTimesThanExpected"));
     		
     		myTS.addTest(new MockTest("testFailsIfMethodNeverCalled"));
+    		myTS.addTest(new MockTest("testFailsIfUnexpectedMethodCalled"));
   			myTS.addTest(new MockTest("testFailsIfMoreMethodsAreCalledThanExpected"));
     		// teest positive scenario
     		myTS.addTest(new MockTest("testSuccessMethodInvocation"));
@@ -59,6 +60,7 @@ package org.mock4as
 			myTS.addTest( new MockTest("testSuccess_whenExpected2ndArgDoesNotEqualActual2ndArg_shouldReturnFalse"));
 			myTS.addTest( new MockTest("testWillReturn_shouldReturnValueDefinedByTest"));
 			myTS.addTest( new MockTest("testWillReturn_shouldReturnTheObjectForTheMethodWithTheExpectedArgs"));
+			myTS.addTest( new MockTest("testWillReturn_shouldReturnNullWhenUnexpectedMethodCalledWithLiberalMock"));
 			myTS.addTest( new MockTest("testWillThrow_shouldThrowErrorObjectDefinedByTest"));
 			myTS.addTest( new MockTest("testSuccess_whenExpectedMethodIsCalledMultipleTimesWithAtLeastOneUnexpectedArg_shouldFail"));
 			myTS.addTest( new MockTest("testSuccess_whenMethodCalledTwiceWithSameExpectedArg_shouldReturnTrue"));
@@ -66,6 +68,7 @@ package org.mock4as
 			myTS.addTest( new MockTest("testSuccess_whenMethodNameCalledWithSameArgsButDifferentNameAsMethodExpected_shouldReturnFalse"));
 			myTS.addTest( new MockTest("testSuccess_whenLessArgsArePassedThanExpected_shouldReturnFalse"));
     		myTS.addTest( new MockTest("testSuccess_whenErrorExpectedAndMethodsCalledAsExpected_shouldReturnTrue"));
+    		myTS.addTest( new MockTest("testSuccess_whenUnExpectedMethodCalledOnLiberalMock"));
 	    	return myTS;
 		}
         

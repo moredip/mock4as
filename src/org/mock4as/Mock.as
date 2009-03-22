@@ -7,6 +7,7 @@ package org.mock4as
 		
 		private var testFailed:Boolean = false;
 		private var reason:String;
+		private var _isLiberal:Boolean = false;
 		private var expectedMethods:Array = new Array();
 		// currentMethod is the method used while setting up the expectations
 		// currentMethod changes every time we call expects(methodName)
@@ -16,6 +17,11 @@ package org.mock4as
 		private var hasBeenVerified:Boolean = false;
 		
 		
+		public function isLiberal():Mock
+		{
+			_isLiberal = true;
+			return this;
+		}
 		
 		
 		public function expects(methodName:String):Mock
@@ -82,6 +88,11 @@ package org.mock4as
 				currentReturnValue = expectedMethod.returnValue;
 				removeMethodCallFromExpectedList(index);
 				if (expectedMethod.exception!=null) throw (expectedMethod.exception);
+				return;
+			} 
+			
+			if( _isLiberal ){
+				currentReturnValue = null;
 			} else {
 				reason = "Was not expecting "+recordedMethod+" to be called.";
 				testFailed = true;

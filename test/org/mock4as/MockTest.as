@@ -25,6 +25,12 @@ package org.mock4as
            assertFalse(mock.success());
        }
        
+       public function testFailsIfUnexpectedMethodCalled():void{
+           var mock:MockSomeInterface = new MockSomeInterface();
+           mock.doSomething();
+           assertFalse(mock.success());   
+       }
+       
        	//Unexpected method call - translate(...)
 		public function testWrongMethodName():void{
 			var mock:MockTranslator = new MockTranslator();
@@ -281,6 +287,18 @@ package org.mock4as
 			assertEquals("", expectedXMLForSecondNodeName, actualXMLReturnedForSecondNodeName);
 		}
 		
+		public function testWillReturn_shouldReturnNullWhenUnexpectedMethodCalledWithLiberalMock():void
+		{
+			var mockClass:MockSomeInterface = new MockSomeInterface();
+			mockClass.isLiberal();
+			mockClass.expects("methodWithNoArgsWhichReturnsString").willReturn("some Return Value");
+			
+			mockClass.methodWithNoArgsWhichReturnsString();
+			var returnValue:String = mockClass.methodWithOneArgWhichReturnsString("some string");
+			
+			assertNull(returnValue);
+		}
+		
 		public function testWillThrow_shouldThrowErrorObjectDefinedByTest():void
 		{
 			var mockClass:MockSomeInterface = new MockSomeInterface();
@@ -365,6 +383,14 @@ package org.mock4as
 			{
 				assertTrue(mockClass.errorMessage(), mockClass.success());
 			}
+		}
+		
+		public function testSuccess_whenUnExpectedMethodCalledOnLiberalMock():void
+		{
+			var mock:MockSomeInterface = new MockSomeInterface();
+			mock.isLiberal();
+			mock.doSomething();
+			assertTrue(mock.errorMessage(), mock.success());
 		}
 	}
 	

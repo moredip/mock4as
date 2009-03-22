@@ -40,6 +40,11 @@ package org.mock4as.samples
 			record("methodWithNoArgsWhichReturnsString");
 			return expectedReturnFor() as String;
 		}
+		public function methodWithOneArgWhichReturnsString(firstArg:String):String
+		{
+			record("methodWithOneArgWhichReturnsString");
+			return expectedReturnFor() as String;	
+		}
 		
 	}
 }
