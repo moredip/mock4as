@@ -46,6 +46,12 @@ package org.mock4as
 			return this;
 		}
 		
+		public function withAnyArgs():Mock
+		{
+			currentMethod.expectAnyArgs();
+			return this;
+		}
+		
 		public function noArgs():Mock
 		{
 			return this;
@@ -66,18 +72,18 @@ package org.mock4as
 		}
 
 		public function record(methodName:String, ...args):void
-		{
-			var newMethodEvocation:MethodInvocation = new MethodInvocation(methodName);
-			newMethodEvocation.args = args;
-			var index:int = getMethodIndex(newMethodEvocation);
+		{			
+			var recordedMethod:RecordedMethod = new RecordedMethod(methodName,args);
+
+			var index:int = lookupRecordedMethodInExpectedMethods(recordedMethod);
 			if (index != -1)
 			{
-				newMethodEvocation = expectedMethods[index];
-				currentReturnValue = newMethodEvocation.returnValue;
+				var expectedMethod:MethodInvocation = expectedMethods[index];
+				currentReturnValue = expectedMethod.returnValue;
 				removeMethodCallFromExpectedList(index);
-				if (newMethodEvocation.exception!=null) throw (newMethodEvocation.exception);
+				if (expectedMethod.exception!=null) throw (expectedMethod.exception);
 			} else {
-				reason = "Was not expecting "+newMethodEvocation.name+"("+newMethodEvocation.args+") to be called.";
+				reason = "Was not expecting "+recordedMethod+" to be called.";
 				testFailed = true;
 			}
 		}
@@ -98,13 +104,18 @@ package org.mock4as
 			}
 		}
 		
-		private function getMethodIndex(methodToFind:MethodInvocation):int
+		private function lookupRecordedMethodInExpectedMethods(recordedMethod:RecordedMethod):int
 		{
 			for (var i:uint =0; i<=expectedMethods.length-1; i++)
 			{
-				if (methodsAreEqual(expectedMethods[i], methodToFind)) return i;
+				var matchOutcome:Object = (expectedMethods[i] as MethodInvocation).matchesRecordedMethod(recordedMethod);
+				if( matchOutcome.matched )
+				{
+					reason = matchOutcome.description;
+					return i;
+				}
 			}
-			return -1;
+			return -1;			
 		}
 		
 
@@ -131,25 +142,6 @@ package org.mock4as
 				methodNamesString+=expectedMethods[i].name+"("+expectedMethods[i].args+") \n";
 			}
 			return methodNamesString;
-		}
-
-		private function methodsAreEqual(expected:MethodInvocation, actual:MethodInvocation):Boolean
-		{
-			if (expected.name != actual.name) return false;
-			if (expected.args.length!=actual.args.length)
-			{
-				reason = "Number of expected args does not equal number of actual args. Expected "+expected+" but was "+actual;
-				return false;
-			}
-			for (var i:uint=0; i<=expected.args.length-1; i++)
-			{
-				if (expected.args[i] != actual.args[i]) 
-				{
-					reason = "Expected "+expected.name+"("+expected.args+") but was "+actual.name+"("+actual.args+")";
-					return false;
-				}
-			}
-			return true;
 		}
 		
 		public function success():Boolean
@@ -184,10 +176,63 @@ class MethodInvocation
 	public var returnValue:Object;
 	public var exception:Object;
 	
+	public function expectAnyArgs():void{
+		args = null;
+	}
+	public function get expectsAnyArgs():Boolean {
+		return null == args;
+	}
+	
+	public function matchesRecordedMethod( recordedMethod:RecordedMethod ):Object
+	{	
+		if (name != recordedMethod.name)
+			return { description: null, matched: false }
+		
+		if (this.expectsAnyArgs)
+			return { description: null, matched: true }
+
+		
+		if (args.length!=recordedMethod.args.length)
+		{
+			return{
+				description: "Number of expected args does not equal number of actual args. Expected "+this+" but was "+recordedMethod,
+				matched: false
+			};
+		}
+		for (var i:uint=0; i<=recordedMethod.args.length-1; i++)
+		{
+			if (args[i] != recordedMethod.args[i]) 
+			{
+				return{
+					description: "Expected "+this+" but was "+recordedMethod,
+					matched: false
+				};
+			}
+		}
+
+		return { description: null, matched: true }
+	}
+	
 	public function toString():String
 	{
 		return name+"("+args+")";
+	}	
+}
+
+class RecordedMethod
+{
+	public function RecordedMethod( methodName : String, methodArgs : Array )
+	{
+		name = methodName;
+		args = methodArgs;
 	}
 	
+	public function toString():String
+	{
+		return name+"("+args+")";
+	}	
+	
+	public var name:String;
+	public var args:Array;
 }
     

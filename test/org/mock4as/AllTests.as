@@ -31,6 +31,8 @@ package org.mock4as
   			myTS.addTest(new MockTest("testFailsIfMoreMethodsAreCalledThanExpected"));
     		// teest positive scenario
     		myTS.addTest(new MockTest("testSuccessMethodInvocation"));
+    		myTS.addTest(new MockTest("testAnyArgsWithNoArgsReturnsCorrectValue"));
+    		myTS.addTest(new MockTest("testAnyArgsWithSomeArgsReturnsValue"));
     		
 
     		

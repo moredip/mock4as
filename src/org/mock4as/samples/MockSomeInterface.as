@@ -35,5 +35,11 @@ package org.mock4as.samples
 			record("anotherMethodWithNoArgs");
 		}
 		
+		public function methodWithNoArgsWhichReturnsString():String
+		{
+			record("methodWithNoArgsWhichReturnsString");
+			return expectedReturnFor() as String;
+		}
+		
 	}
 }

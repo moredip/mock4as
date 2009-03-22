@@ -92,7 +92,27 @@ package org.mock4as
 
 			assertFalse(mock.success());
 
-		}  			
+		}  		
+		
+		public function testAnyArgsWithNoArgsReturnsCorrectValue():void{
+			var mock:MockSomeInterface = new MockSomeInterface();
+			mock.expects('methodWithNoArgsWhichReturnsString').withAnyArgs().willReturn("Some String");
+			
+			var returnedString:String = mock.methodWithNoArgsWhichReturnsString();
+			
+			assertEquals( "Some String", returnedString );
+			assertTrue(mock.success());
+		}	
+
+		public function testAnyArgsWithSomeArgsReturnsValue():void{
+			var mock:MockSomeInterface = new MockSomeInterface();
+			mock.expects('doSomethingAndReturnXML').withAnyArgs().willReturn(<some>xml</some>);
+			
+			var returnedXml:XML = mock.doSomethingAndReturnXML('some string');
+			
+			assertEquals( <some>xml</some>, returnedXml );
+			assertTrue(mock.success());
+		}	
 		
 		//Unexpected method call. Expected translate(...) to be invoked 0 time(s), but it was invoked 1 time(s).";
 		public function testMethodInvocationMoreTimesThanExpected():void{

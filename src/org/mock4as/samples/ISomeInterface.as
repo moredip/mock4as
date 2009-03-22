@@ -7,5 +7,6 @@ package org.mock4as.samples
 		function doSomethingElse(someStringArg:String):void;
 		function doSomethingWith2Args(firstArg:String, secondArg:XML):void;
 		function doSomethingAndReturnXML(inNodeName:String):XML;
+		function methodWithNoArgsWhichReturnsString():String;
 	}
 }
