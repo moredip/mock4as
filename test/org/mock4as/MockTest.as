@@ -392,6 +392,53 @@ package org.mock4as
 			mock.doSomething();
 			assertTrue(mock.errorMessage(), mock.success());
 		}
+		
+		public function testWillExecute_ExecutesClosureWhenExpectedMethodIsCalled():void {
+			var mock:MockSomeInterface = new MockSomeInterface();
+			
+			var bClosureExecuted:Boolean = false;
+			mock.expects('doSomething').willExecute( 
+				function():void{ bClosureExecuted = true; } 
+			);
+			
+			mock.doSomething();
+			
+			assertTrue( bClosureExecuted );
+		}
+		
+		public function testWillExecute_ExpectedMethodReturnsResultOfClosure():void {
+						var mock:MockSomeInterface = new MockSomeInterface();
+			
+			mock.expects('methodWithNoArgsWhichReturnsString').willExecute( 
+				function():String{ return "result from closure"; } 
+			);
+			
+			var returnValue:String = mock.methodWithNoArgsWhichReturnsString();
+			
+			assertEquals( "result from closure", returnValue );
+		}
+		
+		public function testWillExecute_ExpectedMethodArgumentsArePassedToClosure():void {
+			var mock:MockSomeInterface = new MockSomeInterface();
+			
+			mock.expects('methodWithOneArgWhichReturnsString').withAnyArgs().willExecute( 
+				function(firstArg:String):String{ return (firstArg + " modified by the closure"); } 
+			);
+			
+			var returnValue:String = mock.methodWithOneArgWhichReturnsString( "some argument" );
+			
+			assertEquals( "some argument modified by the closure", returnValue );
+		}		
+		
+		public function testWillExecute_CanMakeAssertionsWithinClosure():void {
+			var mock:MockSomeInterface = new MockSomeInterface();
+			
+			mock.expects('doSomething').willExecute( 
+				function():void{ assertEquals(4,2+2) } 
+			);
+			
+			mock.doSomething();			
+		}
 	}
 	
 }

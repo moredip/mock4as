@@ -62,6 +62,11 @@ package org.mock4as
 		{
 			return this;
 		}
+		
+		public function willExecute(closure:Function):void
+		{
+			currentMethod.closure = closure;
+		}
 
 		public function willReturn(returnValue:Object):void
 		{
@@ -85,9 +90,8 @@ package org.mock4as
 			if (index != -1)
 			{
 				var expectedMethod:MethodInvocation = expectedMethods[index];
-				currentReturnValue = expectedMethod.returnValue;
 				removeMethodCallFromExpectedList(index);
-				if (expectedMethod.exception!=null) throw (expectedMethod.exception);
+				currentReturnValue = expectedMethod.simulateMethod( args );
 				return;
 			} 
 			
@@ -173,6 +177,8 @@ package org.mock4as
 		
 	}
 }
+	import org.mock4as.Mock;
+	
 
 class MethodInvocation 
 {
@@ -186,6 +192,8 @@ class MethodInvocation
 	public var args:Array = new Array();
 	public var returnValue:Object;
 	public var exception:Object;
+	
+	public var closure:Function = null;
 	
 	public function expectAnyArgs():void{
 		args = null;
@@ -222,6 +230,15 @@ class MethodInvocation
 		}
 
 		return { description: null, matched: true }
+	}
+	
+	public function simulateMethod( args:Array ):Object {
+		if( null != closure )
+			return closure.apply(null,args);
+		else if( null != exception )
+			throw exception;
+		else
+			return returnValue;
 	}
 	
 	public function toString():String

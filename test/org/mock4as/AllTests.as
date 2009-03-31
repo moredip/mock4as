@@ -69,6 +69,11 @@ package org.mock4as
 			myTS.addTest( new MockTest("testSuccess_whenLessArgsArePassedThanExpected_shouldReturnFalse"));
     		myTS.addTest( new MockTest("testSuccess_whenErrorExpectedAndMethodsCalledAsExpected_shouldReturnTrue"));
     		myTS.addTest( new MockTest("testSuccess_whenUnExpectedMethodCalledOnLiberalMock"));
+	    	myTS.addTest( new MockTest("testWillExecute_ExecutesClosureWhenExpectedMethodIsCalled"));
+	    	myTS.addTest( new MockTest("testWillExecute_ExpectedMethodReturnsResultOfClosure"));
+	    	myTS.addTest( new MockTest("testWillExecute_ExpectedMethodArgumentsArePassedToClosure"));
+	    	myTS.addTest( new MockTest("testWillExecute_CanMakeAssertionsWithinClosure"));
+	    	
 	    	return myTS;
 		}
         

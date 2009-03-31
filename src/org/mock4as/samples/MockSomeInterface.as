@@ -42,7 +42,7 @@ package org.mock4as.samples
 		}
 		public function methodWithOneArgWhichReturnsString(firstArg:String):String
 		{
-			record("methodWithOneArgWhichReturnsString");
+			record("methodWithOneArgWhichReturnsString", firstArg );
 			return expectedReturnFor() as String;	
 		}
 		
