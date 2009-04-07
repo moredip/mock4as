@@ -261,6 +261,31 @@ package org.mock4as
 			assertFalse(mockClass.errorMessage(), mockClass.success());
 		}
 		
+		public function testErrorMessage_whenSomeExpectedMethodsWereNotCalled():void
+		{
+			var mock:MockSomeInterface = new MockSomeInterface();
+			
+			mock.expects('aMethodThatIsNotCalled');
+			mock.expects('doSomething');
+			mock.expects('anotherMethodThatIsNotCalled').withArgs('string',1,3.4);
+			
+			mock.doSomething();
+			
+			var expectedErrorMessage:String = 
+				"The following methods were expected but not called: \n"+
+				"aMethodThatIsNotCalled() \n"+
+				"anotherMethodThatIsNotCalled(string,1,3.4) \n";
+			assertEquals( expectedErrorMessage, mock.errorMessage() );
+		}
+		
+		public function testErrorMessage_whenUnexpectedMethodCalled():void
+		{
+			var mock:MockSomeInterface = new MockSomeInterface();
+			mock.doSomethingWith2Args('first argument', <someXml>second argument</someXml>);
+			
+			var expectedErrorMessage:String = "Was not expecting doSomethingWith2Args(first argument,second argument) to be called.";
+			assertEquals( expectedErrorMessage, mock.errorMessage() );
+		}
 		
 		public function testWillReturn_shouldReturnValueDefinedByTest():void
 		{

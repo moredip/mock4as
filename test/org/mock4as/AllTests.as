@@ -58,9 +58,14 @@ package org.mock4as
 			myTS.addTest( new MockTest("testSuccess_whenExpectedCallsWithExpectedArgsEqualActualCallsWithActualArgs_shouldReturnTrue"));
 			myTS.addTest( new MockTest("testSuccess_whenExpectedArgDoesNotEqualActualArg_shouldReturnFalse"));
 			myTS.addTest( new MockTest("testSuccess_whenExpected2ndArgDoesNotEqualActual2ndArg_shouldReturnFalse"));
+			
+			myTS.addTest( new MockTest("testErrorMessage_whenSomeExpectedMethodsWereNotCalled") );
+			myTS.addTest( new MockTest("testErrorMessage_whenUnexpectedMethodCalled") );
+			
 			myTS.addTest( new MockTest("testWillReturn_shouldReturnValueDefinedByTest"));
 			myTS.addTest( new MockTest("testWillReturn_shouldReturnTheObjectForTheMethodWithTheExpectedArgs"));
 			myTS.addTest( new MockTest("testWillReturn_shouldReturnNullWhenUnexpectedMethodCalledWithLiberalMock"));
+			
 			myTS.addTest( new MockTest("testWillThrow_shouldThrowErrorObjectDefinedByTest"));
 			myTS.addTest( new MockTest("testSuccess_whenExpectedMethodIsCalledMultipleTimesWithAtLeastOneUnexpectedArg_shouldFail"));
 			myTS.addTest( new MockTest("testSuccess_whenMethodCalledTwiceWithSameExpectedArg_shouldReturnTrue"));

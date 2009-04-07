@@ -154,7 +154,7 @@ package org.mock4as
 			
 			for (var i:uint=0; i<=expectedMethods.length-1; i++)
 			{
-				methodNamesString+=expectedMethods[i].name+"("+expectedMethods[i].args+") \n";
+				methodNamesString+=expectedMethods[i].toString()+" \n";
 			}
 			return methodNamesString;
 		}
