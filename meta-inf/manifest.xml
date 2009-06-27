@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<!-- manifest.xml -->
-<!-- mock4as.swc version 1.0 -->
-<componentPackage>
-    <component class="org.mock4as.Mock"/>
-</componentPackage>
