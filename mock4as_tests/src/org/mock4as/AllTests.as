@@ -79,6 +79,19 @@ package org.mock4as
 	    	myTS.addTest( new MockTest("testWillExecute_ExpectedMethodArgumentsArePassedToClosure"));
 	    	myTS.addTest( new MockTest("testWillExecute_CanMakeAssertionsWithinClosure"));
 	    	
+	    	myTS.addTest( new HamcrestTest("testEqualToMatcherWithSingleArgumentShouldSucceed") );
+	    	myTS.addTest( new HamcrestTest("testEqualToMatcherWithSingleArgumentShouldFail") );
+	    	myTS.addTest( new HamcrestTest("testAnythingMatcherWithSingleArgument") );	    
+	    	myTS.addTest( new HamcrestTest("testAnythingMatcherAndEqualToMatcherShouldSucceedIfEqualToExpectationIsMet") );
+	    	myTS.addTest( new HamcrestTest("testAnythingMatcherAndEqualToMatcherShouldFailIfEqualToExpectationIsNotMet") );
+	    	myTS.addTest( new HamcrestTest("testAnyOfMatcherSucceedsIfOneSubmatcherMatches") );
+	    	myTS.addTest( new HamcrestTest("testAnyOfMatcherFailsIfNeitherSubmatcherMatches") );	    		    	
+	    	myTS.addTest( new HamcrestTest("testAnyOfMatcherDescribesItselfNicelyUponFailure") );	    
+	    		
+	    	/*
+	    	myTS.addTest( new HamcrestTest("") );
+	    	*/
+	    	
 	    	return myTS;
 		}
         

@@ -9,5 +9,6 @@ package org.mock4as.samples
 		function doSomethingAndReturnXML(inNodeName:String):XML;
 		function methodWithNoArgsWhichReturnsString():String;
 		function methodWithOneArgWhichReturnsString(firstArg:String):String;
+		function methodWithOneArrayArg(array:Array):void;
 	}
 }

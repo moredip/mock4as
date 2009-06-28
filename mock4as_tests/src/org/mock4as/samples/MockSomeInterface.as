@@ -46,5 +46,10 @@ package org.mock4as.samples
 			return expectedReturnFor() as String;	
 		}
 		
+		public function methodWithOneArrayArg(array:Array):void
+		{
+			record("methodWithOneArrayArg",array);
+		}
+		
 	}
 }

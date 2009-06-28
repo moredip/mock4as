@@ -7,7 +7,9 @@
       <libraryPathEntry kind="1" linkType="1" path="libs"/>
       <libraryPathEntry kind="3" linkType="1" path="/mock4as/bin/mock4as.swc" useDefaultLinkType="false"/>
     </libraryPath>
-    <sourceAttachmentPath/>
+    <sourceAttachmentPath>
+      <sourceAttachmentPathEntry kind="3" linkType="1" path="/home/phodgson/git/mock4as/mock4as_tests/libs/hamcrest.swc" sourcepath="/home/phodgson/git/hamcrest-as3/hamcrest/src" useDefaultLinkType="false"/>
+    </sourceAttachmentPath>
   </compiler>
   <applications>
     <application path="mock4as.mxml"/>

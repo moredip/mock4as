@@ -1,5 +1,7 @@
 package org.mock4as
 {
+	import org.hamcrest.Matcher;
+	
 	internal class MethodInvocation 
 	{
 	   public function MethodInvocation(methodName : String)
@@ -44,7 +46,19 @@ package org.mock4as
 			}
 			for (var i:uint=0; i<=recordedMethod.args.length-1; i++)
 			{
-				if (args[i] != recordedMethod.args[i]) 
+				
+				if( args[i] is Matcher )
+				{
+					var argMatcher:Matcher = (Matcher)(args[i]);
+					if( !argMatcher.matches( recordedMethod.args[i] ) )
+					{
+						return{
+							description: "hamcrest mismatch",
+							matched: false
+						}
+					}
+				
+				}else if (args[i] != recordedMethod.args[i]) 
 				{
 					return{
 						description: "Expected "+this+" but was "+recordedMethod,
