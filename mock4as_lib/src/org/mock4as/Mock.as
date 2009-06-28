@@ -42,14 +42,13 @@ package org.mock4as
 		
 		public function withArgs(...args):Mock
 		{
-			currentMethod.args = args;
+			currentMethod.specifyArgs( args );
 			return this;
 		}
 		
 		public function withArg(arg:Object):Mock
 		{
-			currentMethod.args[0] = arg;
-			return this;
+			return this.withArgs( arg );
 		}
 		
 		public function withAnyArgs():Mock

@@ -9,7 +9,7 @@ package org.mock4as
 	   
 		public var name:String;
 		public var timesInvoked:int = 1;
-		public var args:Array = new Array();
+		private var args:Array = new Array();
 		public var returnValue:Object;
 		public var exception:Object;
 		
@@ -20,6 +20,10 @@ package org.mock4as
 		}
 		public function get expectsAnyArgs():Boolean {
 			return null == args;
+		}
+		
+		public function specifyArgs(arguments:Array):void {
+			this.args = arguments;
 		}
 		
 		public function matchesRecordedMethod( recordedMethod:RecordedMethod ):Object
