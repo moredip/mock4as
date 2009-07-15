@@ -274,7 +274,7 @@ package org.mock4as
 			var expectedErrorMessage:String = 
 				"The following methods were expected but not called: \n"+
 				"aMethodThatIsNotCalled() \n"+
-				"anotherMethodThatIsNotCalled(\"string\",<1>,<3.4>) \n";
+				"anotherMethodThatIsNotCalled(string,1,3.4) \n";
 			assertEquals( expectedErrorMessage, mock.errorMessage() );
 		}
 		

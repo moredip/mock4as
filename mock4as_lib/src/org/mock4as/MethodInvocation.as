@@ -1,8 +1,6 @@
 package org.mock4as
 {
 	import org.hamcrest.Matcher;
-	import org.hamcrest.object.equalTo;
-	import org.hamcrest.object.nullValue;
 	
 	internal class MethodInvocation 
 	{
@@ -13,34 +11,21 @@ package org.mock4as
 	   
 		public var name:String;
 		public var timesInvoked:int = 1;
-		private var expectedArgs:Array = new Array();
+		private var args:Array = new Array();
 		public var returnValue:Object;
 		public var exception:Object;
 		
 		public var closure:Function = null;
 		
 		public function expectAnyArgs():void{
-			expectedArgs = null;
+			args = null;
 		}
 		public function get expectsAnyArgs():Boolean {
-			return null == expectedArgs;
+			return null == args;
 		}
 		
 		public function specifyArgs(arguments:Array):void {
-			
-			expectedArgs = mapSpecifiedArgumentsIntoMatchers( arguments );
-		}
-		
-		private function mapSpecifiedArgumentsIntoMatchers(arguments:Array):Array {
-			return arguments.map(
-				function(argument:Object, dummy:int, a:Array):Object {
-			  		if( argument is Matcher )
-			  			return argument;
-		  			else if( null == argument )
-		  				return nullValue();
-	  				else 
-	  					return equalTo(argument);
-				});
+			this.args = arguments;
 		}
 		
 		public function matchesRecordedMethod( recordedMethod:RecordedMethod ):Object
@@ -52,25 +37,33 @@ package org.mock4as
 				return { description: null, matched: true }
 	
 			
-			if (expectedArgs.length!=recordedMethod.args.length)
+			if (args.length!=recordedMethod.args.length)
 			{
 				return{
 					description: "Number of expected args does not equal number of actual args. Expected "+this+" but was "+recordedMethod,
 					matched: false
 				};
 			}
-			
 			for (var i:uint=0; i<=recordedMethod.args.length-1; i++)
 			{
-				var arg:Object = recordedMethod.args[i];
-				var argExpectation:Matcher = (Matcher)(expectedArgs[i]);
 				
-				if( !argExpectation.matches( arg ) )
+				if( args[i] is Matcher )
+				{
+					var argMatcher:Matcher = (Matcher)(args[i]);
+					if( !argMatcher.matches( recordedMethod.args[i] ) )
+					{
+						return{
+							description: "hamcrest mismatch",
+							matched: false
+						}
+					}
+				
+				}else if (args[i] != recordedMethod.args[i]) 
 				{
 					return{
 						description: "Expected "+this+" but was "+recordedMethod,
 						matched: false
-					}
+					};
 				}
 			}
 	
@@ -88,7 +81,7 @@ package org.mock4as
 		
 		public function toString():String
 		{
-			return name+"("+expectedArgs+")";
+			return name+"("+args+")";
 		}	
 	}
 }
